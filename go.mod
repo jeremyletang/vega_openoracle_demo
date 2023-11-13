@@ -3,7 +3,7 @@ module github.com/jeremyletang/vega_openoracle_demo
 go 1.20
 
 require (
-	code.vegaprotocol.io/oracles-relay v0.0.0-20220819135656-783260e20264
+	code.vegaprotocol.io/oracles-relay v0.0.0-20231113104800-b399be2d765c
 	code.vegaprotocol.io/vega v0.73.3
 	github.com/ethereum/go-ethereum v1.11.6
 	github.com/pelletier/go-toml v1.9.5
@@ -33,5 +33,4 @@ require (
 	google.golang.org/protobuf v1.30.0 // indirect
 )
 
-replace code.vegaprotocol.io/oracles-relay => ../oracles-relay
 replace github.com/shopspring/decimal => github.com/vegaprotocol/decimal v1.3.1-uint256
