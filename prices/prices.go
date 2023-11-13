@@ -16,10 +16,9 @@ import (
 	walletpb "code.vegaprotocol.io/vega/protos/vega/wallet/v1"
 	wcommands "code.vegaprotocol.io/vega/wallet/commands"
 	"code.vegaprotocol.io/vega/wallet/wallet"
+	"github.com/ethereum/go-ethereum/crypto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-
-	"github.com/ethereum/go-ethereum/crypto"
 )
 
 type Prices struct {
@@ -40,7 +39,7 @@ func New(
 
 	publicKeyECDSA, ok := privKey.Public().(*ecdsa.PublicKey)
 	if !ok {
-		log.Fatal("cannot assert type: publicKey is not of type *ecdsa.PublicKey")
+		return nil, fmt.Errorf("cannot assert type: publicKey is not of type *ecdsa.PublicKey")
 	}
 
 	address := crypto.PubkeyToAddress(*publicKeyECDSA).Hex()
@@ -57,6 +56,8 @@ func New(
 	if err != nil {
 		return nil, fmt.Errorf("could not generate first key: %v", err)
 	}
+
+	log.Printf("using vega wallet pubkey: %v", firstKey.PublicKey())
 
 	// open a grpc client connection with the vega node,
 	// this will be used to:
@@ -106,7 +107,7 @@ func (p *Prices) Send(
 	// verify the validaty of the signatures for conveniences
 	address, prices, err := openoracle.Verify(*res)
 	if err != nil {
-		log.Fatalf("enable to verify open oracle payload: %v", err)
+		return fmt.Errorf("enable to verify open oracle payload: %w", err)
 	}
 
 	log.Printf("recovered ethereum address from the signatures: %v", address)
